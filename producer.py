@@ -20,6 +20,7 @@ def main():
         for i in range(1, args.max + 1) if args.max > 0 else iter(int, 1):
             event = SCHEMAS[args.schema].generator(i)
             producer.send(args.schema, event)
+            print(event)
             producer.flush()
             if sleep_s > 0:
                 time.sleep(sleep_s)
