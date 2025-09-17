@@ -4,7 +4,7 @@ import argparse
 from kafka import KafkaProducer
 from schemas import SCHEMAS
 
-p = KafkaProducer(bootstrap_servers="localhost:9092",
+producer = KafkaProducer(bootstrap_servers="localhost:9092",
                   value_serializer=lambda v: json.dumps(v).encode())
 
 def main():
@@ -18,9 +18,9 @@ def main():
 
     try:
         for i in range(1, args.max + 1) if args.max > 0 else iter(int, 1):
-            event = SCHEMAS(args.schema).generator(i)
-            p.send(args.schema, event)
-            p.flush()
+            event = SCHEMAS[args.schema].generator(i)
+            producer.send(args.schema, event)
+            producer.flush()
             if sleep_s > 0:
                 time.sleep(sleep_s)
     except KeyboardInterrupt:
